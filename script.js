@@ -42,3 +42,33 @@ function operate(numOne, operator, numTwo) {
     };
     return answer;
 };
+
+const numbers = document.querySelector(".numbers")
+numbers.textContent = "";
+
+const buttons = document.querySelectorAll(".key");
+
+function disableDecimal() {
+    // write code here later
+}
+
+// display numbers on screen if int or decimal
+function toDisplay(input) {
+    let decimalCount;
+    if (input == ".") {
+        numbers.append(input);
+        decimalCount++;
+    };
+    if (decimalCount === 1) {
+        // write code here later
+    }
+    input = parseInt(input);
+    if (Number.isInteger(input)) {
+        numbers.append(input);
+    };
+};
+
+// clicking a button takes textContent out of div and performs display function to the screen
+buttons.forEach((e) => {
+    e.addEventListener("click", () => toDisplay(e.textContent));
+});
