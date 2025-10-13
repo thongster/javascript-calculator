@@ -44,23 +44,23 @@ function operate(numOne, operator, numTwo) {
 };
 
 const numbers = document.querySelector(".numbers")
-numbers.textContent = "";
-
 const buttons = document.querySelectorAll(".key");
 
-function disableDecimal() {
-    // write code here later
-}
+let hasDecimal = false;
+// reminder to trigger back to true when clear or when new input
 
 // display numbers on screen if int or decimal
 function toDisplay(input) {
-    let decimalCount;
     if (input == ".") {
         numbers.append(input);
-        decimalCount++;
+        hasDecimal = true;
     };
-    if (decimalCount === 1) {
-        // write code here later
+    if (hasDecimal === true) {
+        buttons.forEach((node) => {
+            if(node.textContent === ".") {
+                node.disabled = true;
+            };
+        });
     }
     input = parseInt(input);
     if (Number.isInteger(input)) {

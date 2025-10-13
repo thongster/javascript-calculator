@@ -71,6 +71,7 @@ button {
     padding: 0;
     font-size: 24px;
     font-family: "Nunito Sans", Arial, Helvetica, sans-serif;
+    background-color: white;
 }
 
 button:hover {
@@ -79,6 +80,11 @@ button:hover {
 
 button:active {
     background-color: #cde7ff;
+}
+
+button:disabled {
+    background-color: white;
+    color: black;
 }
 
 #clear, #equal {
