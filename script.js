@@ -42,5 +42,3 @@ function operate(numOne, operator, numTwo) {
     };
     return answer;
 };
-
-operate(18, "*", 2);
