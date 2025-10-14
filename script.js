@@ -1,3 +1,13 @@
+// initialize variables
+let numOne = 0;
+let numTwo = 0;
+let operator;
+
+const numbers = document.querySelector(".numbers")
+const buttons = document.querySelectorAll(".key");
+
+// disable/enable decimal boolean
+let hasDecimal = false;
 
 // add, subtract, multiply, divide functions
 function add(a, b) {
@@ -15,11 +25,6 @@ function multiply(a, b) {
 function divide(a, b) {
     return a / b;
 }
-
-// initialize variables
-let numOne = 0;
-let numTwo = 0;
-let operator;
 
 // operate function
 function operate(numOne, operator, numTwo) {
@@ -43,12 +48,6 @@ function operate(numOne, operator, numTwo) {
     return answer;
 };
 
-const numbers = document.querySelector(".numbers")
-const buttons = document.querySelectorAll(".key");
-
-let hasDecimal = false;
-// reminder to trigger back to true when clear or when new input
-
 // display numbers on screen if int or decimal
 function toDisplay(input) {
     if (input == ".") {
@@ -70,19 +69,20 @@ function toDisplay(input) {
 
 // clear the display 
 function clearDisplay(input) {
-    buttons.forEach((node) => {
+    buttons.forEach(() => {
         if (input === "C") {
             numbers.textContent = "";
             buttons.forEach((node) => {
                 if (node.textContent === ".") {
                     node.disabled = false;
+                    hasDecimal = false;
                 };
             });
         };
     });
 }
 
-// clicking a button performs display function to the screen
+// clicking a button loops through textContent matches it to the display function to the screen
 buttons.forEach((e) => {
     e.addEventListener("click", () => toDisplay(e.textContent));
     e.addEventListener("click", () => clearDisplay(e.textContent));
