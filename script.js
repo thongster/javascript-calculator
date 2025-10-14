@@ -57,7 +57,7 @@ function toDisplay(input) {
     };
     if (hasDecimal === true) {
         buttons.forEach((node) => {
-            if(node.textContent === ".") {
+            if (node.textContent === ".") {
                 node.disabled = true;
             };
         });
@@ -68,7 +68,22 @@ function toDisplay(input) {
     };
 };
 
-// clicking a button takes textContent out of div and performs display function to the screen
+// clear the display 
+function clearDisplay(input) {
+    buttons.forEach((node) => {
+        if (input === "C") {
+            numbers.textContent = "";
+            buttons.forEach((node) => {
+                if (node.textContent === ".") {
+                    node.disabled = false;
+                };
+            });
+        };
+    });
+}
+
+// clicking a button performs display function to the screen
 buttons.forEach((e) => {
     e.addEventListener("click", () => toDisplay(e.textContent));
+    e.addEventListener("click", () => clearDisplay(e.textContent));
 });
