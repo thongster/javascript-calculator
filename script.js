@@ -1,7 +1,10 @@
 // initialize variables
-let numOne = 0;
-let numTwo = 0;
-let operator;
+let numOne = "";
+let numTwo = "";
+let operator = "";
+let answer = "";
+let numOneState = false;
+let numTwoState = false;
 
 const numbers = document.querySelector(".numbers");
 const buttons = document.querySelector(".buttonSection");
@@ -82,19 +85,35 @@ function operate(numOne, operator, numTwo) {
 // };
 
 // clear the display 
-// function clearDisplay(input) {
-//     buttons.forEach(() => {
-//         if (input === "C") {
-//             numbers.textContent = "";
-//             buttons.forEach((node) => {
-//                 if (node.textContent === ".") {
-//                     node.disabled = false;
-//                     hasDecimal = false;
-//                 };
-//             });
-//         };
-//     });
-// }
+function clearDisplay() {
+    numbers.textContent = "";
+};
+
+function enableDecimal() {
+    keys.forEach((key) => {
+        if (key.textContent === ".") {
+            hasDecimal = false;
+            key.disabled = false;
+        }
+    });
+};
+
+function disableDecimal() {
+    keys.forEach((key) => {
+        if (key.textContent === ".") {
+            hasDecimal = true;
+            key.disabled = true;
+        }
+    });
+};
+
+function resetOperation() {
+    numOne = "";
+    numTwo = "";
+    operator = "";
+    numOneState = false;
+    numTwoState = false;
+}
 
 // clicking a button loops through textContent matches it to the display function to the screen
 // buttons.forEach((e) => {
@@ -106,22 +125,37 @@ function operate(numOne, operator, numTwo) {
 buttons.addEventListener("click", (event) => {
     let input = event.target.textContent
     if (input === ".") {
+        // turn off decimal button after 1 input
+        if (numOneState === false) {
+            numOne = numOne + input;
+        }
+        else {
+            numTwo = numTwo + input;
+        };
         numbers.append(input);
-        hasDecimal = true;
-        event.target.disabled = true;
-    };
-    if (input === "C") {
-        numbers.textContent = "";
-        keys.forEach((key) => {
-            if (key.textContent === ".") {
-                console.log("we here");
-                key.disabled = false;
-                hasDecimal = false;
-            }
-        });
-    };    
-    input = parseInt(event.target.textContent);
-    if (Number.isInteger(input)) {
+        disableDecimal();
+    } else if (input === "C") {
+        clearDisplay();
+        enableDecimal()
+        resetOperation();
+    // } else if (input === "=") {
+    //     operate(numOne, operator, numTwo);
+    // }
+    } else if (input === "+" || input === "-" || input === "x" || input === "/") {
+        operator = input;
+        numOneState = true;
+    } else if (numOneState === false) {
+        numOne = numOne + input;
         numbers.append(input);
+        console.log(`This is my 1st variable: ${numOne}`);
+    } else if (numOneState === true) {
+        // write code to make this just happen once
+        clearDisplay();
+        enableDecimal();
+        numTwo = numTwo + input;
+        numbers.append(input);
+        console.log(`is the decimal true or false inside numTwo section ${hasDecimal}`);
+        console.log(`This is my 2nd variable: ${numTwo}`);
     };
+    
 });
