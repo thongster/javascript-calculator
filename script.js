@@ -42,26 +42,22 @@ function setNumTwo() {
 // operate function
 function operate(numOne, operator, numTwo) {
     let answer;
-    buttons.forEach((e) => {
-        if (e.textContent === "=") {
-            switch (operator) {
-                case "+":
-                    answer = add(numOne, numTwo);
-                    break;
-                case "-":
-                    answer = subtract(numOne, numTwo);
-                    break;
-                case "*":
-                    answer = multiply(numOne, numTwo);
-                    break;
-                case "/":
-                    answer = divide(numOne, numTwo);
-                    break;
-                default:
-                    console.log("invalid operator")
-            };
+        switch (operator) {
+            case "+":
+                answer = add(numOne, numTwo);
+                break;
+            case "-":
+                answer = subtract(numOne, numTwo);
+                break;
+            case "*":
+                answer = multiply(numOne, numTwo);
+                break;
+            case "/":
+                answer = divide(numOne, numTwo);
+                break;
+            default:
+                console.log("invalid operator")
         };
-    });
     return answer;
 };
 
@@ -138,24 +134,30 @@ buttons.addEventListener("click", (event) => {
         clearDisplay();
         enableDecimal()
         resetOperation();
-    // } else if (input === "=") {
-    //     operate(numOne, operator, numTwo);
-    // }
     } else if (input === "+" || input === "-" || input === "x" || input === "/") {
         operator = input;
         numOneState = true;
+        enableDecimal();
+    } else if (input === "=") {
+        console.log(numOne)
+        console.log(numTwo)
+        console.log(operator)
+        numbers.textContent = operate(numOne, operator, numTwo);
+        // numbers.textContent = operate(numOne, operator, numTwo);
     } else if (numOneState === false) {
         numOne = numOne + input;
         numbers.append(input);
-        console.log(`This is my 1st variable: ${numOne}`);
     } else if (numOneState === true) {
         // write code to make this just happen once
-        clearDisplay();
-        enableDecimal();
+        if (numTwoState === false) {
+            clearDisplay();
+            numTwoState = true;
+        }
         numTwo = numTwo + input;
         numbers.append(input);
-        console.log(`is the decimal true or false inside numTwo section ${hasDecimal}`);
-        console.log(`This is my 2nd variable: ${numTwo}`);
+    } else {
+        console.log("this should be the ?");
     };
     
 });
+
