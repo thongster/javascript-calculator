@@ -44,12 +44,14 @@ function operate(numOne, operator, numTwo) {
     let answer;
         switch (operator) {
             case "+":
+                numOne = parseInt(numOne);
+                numTwo = parseInt(numTwo);
                 answer = add(numOne, numTwo);
                 break;
             case "-":
                 answer = subtract(numOne, numTwo);
                 break;
-            case "*":
+            case "x":
                 answer = multiply(numOne, numTwo);
                 break;
             case "/":
@@ -60,25 +62,6 @@ function operate(numOne, operator, numTwo) {
         };
     return answer;
 };
-
-// display numbers on screen if int or decimal
-// function toDisplay(input) {
-    // if (input == ".") {
-    //     numbers.append(input);
-    //     hasDecimal = true;
-    // };
-    // if (hasDecimal === true) {
-    //     buttons.forEach((node) => {
-    //         if (node.textContent === ".") {
-    //             node.disabled = true;
-    //         };
-    //     });
-    // }
-//     input = parseInt(input);
-//     if (Number.isInteger(input)) {
-//         numbers.append(input);
-//     };
-// };
 
 // clear the display 
 function clearDisplay() {
@@ -111,13 +94,6 @@ function resetOperation() {
     numTwoState = false;
 }
 
-// clicking a button loops through textContent matches it to the display function to the screen
-// buttons.forEach((e) => {
-//     e.addEventListener("click", () => toDisplay(e.textContent));
-//     e.addEventListener("click", () => clearDisplay(e.textContent));
-//     e.addEventListener("click", () => operate(numOne, operator, numTwo));
-// });
-
 buttons.addEventListener("click", (event) => {
     let input = event.target.textContent
     if (input === ".") {
@@ -139,11 +115,12 @@ buttons.addEventListener("click", (event) => {
         numOneState = true;
         enableDecimal();
     } else if (input === "=") {
-        console.log(numOne)
-        console.log(numTwo)
-        console.log(operator)
-        numbers.textContent = operate(numOne, operator, numTwo);
-        // numbers.textContent = operate(numOne, operator, numTwo);
+        if (numOne != "" && numTwo != "") {
+            numbers.textContent = operate(numOne, operator, numTwo);
+            answer = numbers.textContent;
+        };
+    } else if (input === "?") {
+        console.log("this should be the ?");
     } else if (numOneState === false) {
         numOne = numOne + input;
         numbers.append(input);
@@ -155,9 +132,5 @@ buttons.addEventListener("click", (event) => {
         }
         numTwo = numTwo + input;
         numbers.append(input);
-    } else {
-        console.log("this should be the ?");
     };
-    
 });
-
