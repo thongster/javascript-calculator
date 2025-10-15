@@ -3,8 +3,8 @@ let numOne = "";
 let numTwo = "";
 let operator = "";
 let answer = "";
-let numOneState = false;
-let numTwoState = false;
+let prevAnswer = "";
+let currentState = "numOne" // numOne, numTwo, result
 
 const numbers = document.querySelector(".numbers");
 const buttons = document.querySelector(".buttonSection");
@@ -44,8 +44,8 @@ function operate(numOne, operator, numTwo) {
     let answer;
         switch (operator) {
             case "+":
-                numOne = parseInt(numOne);
-                numTwo = parseInt(numTwo);
+                numOne = numOne;
+                numTwo = numTwo;
                 answer = add(numOne, numTwo);
                 break;
             case "-":
@@ -90,15 +90,15 @@ function resetOperation() {
     numOne = "";
     numTwo = "";
     operator = "";
-    numOneState = false;
-    numTwoState = false;
+    prevAnswer = "";
+    currentState = "numOne";
 }
 
 buttons.addEventListener("click", (event) => {
     let input = event.target.textContent
     if (input === ".") {
         // turn off decimal button after 1 input
-        if (numOneState === false) {
+        if (currentState === "numOne") {
             numOne = numOne + input;
         }
         else {
@@ -107,30 +107,49 @@ buttons.addEventListener("click", (event) => {
         numbers.append(input);
         disableDecimal();
     } else if (input === "C") {
+        // reset entire calculator
         clearDisplay();
         enableDecimal()
         resetOperation();
     } else if (input === "+" || input === "-" || input === "x" || input === "/") {
         operator = input;
-        numOneState = true;
+        if (currentState === "numOne") {
+            currentState = "numTwo";
+        } else {
+            currentState = "result";
+        };
         enableDecimal();
     } else if (input === "=") {
-        if (numOne != "" && numTwo != "") {
+        // only executes if both nums have values
+        // runs the operation and assigns answer and previous answer
+        
+        if (numOne != "" && numTwo != "" && currentState === "numTwo") {
             numbers.textContent = operate(numOne, operator, numTwo);
+            answer = Number(numbers.textContent);
+            prevAnswer = Number(answer);
+            numTwo = "";
+            currentState === "result";
+        } else if (currentState === "result") {
+            numbers.textContent = operate(prevAnswer, operator, numTwo);
+            console.log("im here");
             answer = numbers.textContent;
+            currenState = "numTwo";
+            prevAnswer = Number(answer);
+            numTwo = "";
         };
     } else if (input === "?") {
+        // put a fun function here
         console.log("this should be the ?");
-    } else if (numOneState === false) {
-        numOne = numOne + input;
+    } else if (currentState === "numOne") {
+        numOne = Number(numOne) + Number(input);
         numbers.append(input);
-    } else if (numOneState === true) {
+    } else if (currentState === "numTwo" || currentState === "result") {
         // write code to make this just happen once
-        if (numTwoState === false) {
+        if (numTwo === "") {
             clearDisplay();
-            numTwoState = true;
-        }
-        numTwo = numTwo + input;
+        };
+        numTwo = Number(numTwo + input);
         numbers.append(input);
+        console.log(numTwo);
     };
 });
