@@ -44,8 +44,8 @@ function operate(numOne, operator, numTwo) {
     let answer;
         switch (operator) {
             case "+":
-                numOne = numOne;
-                numTwo = numTwo;
+                numOne = Number(numOne);
+                numTwo = Number(numTwo);
                 answer = add(numOne, numTwo);
                 break;
             case "-":
@@ -115,25 +115,34 @@ buttons.addEventListener("click", (event) => {
         operator = input;
         if (currentState === "numOne") {
             currentState = "numTwo";
-        } else {
-            currentState = "result";
+        } else if (prevAnswer === "" && currentState === "numTwo") {
+            numbers.textContent = operate(numOne, operator, numTwo);
+            prevAnswer = Number(numbers.textContent);  
+            console.log(`no equation pressed, prev answer is ${prevAnswer}`) 
+            numTwo = "";
+        } else if (currentState === "numTwo") {
+            numbers.textContent = operate(prevAnswer, operator, numTwo);
+            // answer = numbers.textContent;
+            prevAnswer = numbers.textContent;
+            numTwo = "";
+            // currentState = "result";
+        } else if (currentState === "result") {
+            console.log("here")
         };
         enableDecimal();
     } else if (input === "=") {
         // only executes if both nums have values
         // runs the operation and assigns answer and previous answer
-        
         if (numOne != "" && numTwo != "" && currentState === "numTwo") {
             numbers.textContent = operate(numOne, operator, numTwo);
             answer = Number(numbers.textContent);
             prevAnswer = Number(answer);
             numTwo = "";
-            currentState === "result";
+            currentState = "result";
         } else if (currentState === "result") {
             numbers.textContent = operate(prevAnswer, operator, numTwo);
-            console.log("im here");
             answer = numbers.textContent;
-            currenState = "numTwo";
+            currentState = "result";
             prevAnswer = Number(answer);
             numTwo = "";
         };
@@ -150,6 +159,5 @@ buttons.addEventListener("click", (event) => {
         };
         numTwo = Number(numTwo + input);
         numbers.append(input);
-        console.log(numTwo);
     };
 });
