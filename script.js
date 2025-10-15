@@ -78,7 +78,7 @@ function resetOperation() {
     currentValue = "";
     storedValue = "";
     operator = "";
-    justEvaluated = false;
+    afterEquals = false;
 }
 
 buttons.addEventListener("click", (event) => {
@@ -90,32 +90,58 @@ buttons.addEventListener("click", (event) => {
             numbers.textContent = currentValue;
             disableDecimal();
         };
+        return;
+    };
     // if number, edit currentValue
-    } else if (!isNaN(input)) {
+    if (!isNaN(input)) {
         if (afterEquals === true) {
-            storedValue = /* last value after equation */
             afterEquals = false;
         } 
         currentValue = currentValue + input;
-        numbers.textCoontent = currentValue;
-        console.log(storedValue);
-        console.log(currentValue);
-    } else if (input === "+" || input === "-" || input === "x" || input === "/") {
-        if (storedValue != "" && currentValue != "") {
-            storedValue = operate(storedValue, input, currentValue);
-            currentValue = "";
-            operator = input;
+        numbers.textContent = currentValue;
+    };
+    
+    // if we press an operator
+    if (input === "+" || input === "-" || input === "x" || input === "/") {
+        // before equals sign, means operator already pressed once, we can calculate
+        if (storedValue && currentValue && operator) {
+            storedValue = operate(storedValue, operator, currentValue);
             numbers.textContent = storedValue;
-        } else {
+            currentValue = "";
+        // if we have the first number and we press an operator for the first time, current number becomes old number
+        } else if (currentValue && !storedValue){
             storedValue = currentValue;
             currentValue = "";
-            operator = input;
         };
-    } else if (input === "C") {
-        // reset entire calculator
+
+        // assign operator
+        operator = input;
+        enableDecimal();
+        return;
+    }; 
+    
+    // reset entire calculator
+    if (input === "C") {
         clearDisplay();
         enableDecimal()
         resetOperation();
+        return;
+    };
+
+    // calculate button
+    if (input === "=") {
+        // if we have all values calculate storedValue
+        // reset all for potential next equation
+        if (storedValue && currentValue && operator) {
+            storedValue = operate(storedValue, operator, currentValue);
+            numbers.textContent = storedValue;
+            currentValue = "";
+            afterEquals = true;
+            operator = "";
+            enableDecimal();
+            return;
+        };
+        return;
     };
 
 
