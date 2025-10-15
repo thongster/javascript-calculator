@@ -97,11 +97,11 @@ button:disabled {
     font-size: 24px;
 }
 
-#clear {
+#clear, #backspace {
     background-color: #cde7ff;
 }
 
-#clear:active {
+#clear:active, #backspace:active {
     background-color: #8cc7ff;
 }
 

@@ -74,6 +74,7 @@ function disableDecimal() {
     });
 };
 
+// reset all
 function resetOperation() {
     currentValue = "";
     storedValue = "";
@@ -81,6 +82,7 @@ function resetOperation() {
     afterEquals = false;
 }
 
+// listen for text from each button (the html text)
 buttons.addEventListener("click", (event) => {
     let input = event.target.textContent
     if (input === ".") {
@@ -92,6 +94,7 @@ buttons.addEventListener("click", (event) => {
         };
         return;
     };
+
     // if number, edit currentValue
     if (!isNaN(input)) {
         if (afterEquals === true) {
@@ -134,6 +137,14 @@ buttons.addEventListener("click", (event) => {
         // reset all for potential next equation
         if (storedValue && currentValue && operator) {
             storedValue = operate(storedValue, operator, currentValue);
+
+            if (storedValue.toString().length > 9) {
+                storedValue = parseFloat(storedValue);
+                storedValue = storedValue.toExponential(4);
+                numbers.textContent = storedValue;
+                return;
+            };
+            
             numbers.textContent = storedValue;
             currentValue = "";
             afterEquals = true;
@@ -144,5 +155,20 @@ buttons.addEventListener("click", (event) => {
         return;
     };
 
+    // backspace button
+    if (input === "<-") {
+        currentValue = currentValue.slice(0, -1);
+        console.log(currentValue);
+        numbers.textContent = numbers.textContent.slice(0, -1);
+        return;
+    };
+
+    // don't allow currentValue to go past display, turn into exp not.
+    if (currentValue.toString().length > 9) {
+        currentValue = parseFloat(currentValue);
+        currentValue = currentValue.toExponential(4); 
+        numbers.textContent = currentValue;
+        return;
+    }
 
 });
