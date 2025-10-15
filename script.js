@@ -1,10 +1,8 @@
 // initialize variables
-let numOne = "";
-let numTwo = "";
+let currentValue = "";
+let storedValue = "";
 let operator = "";
-let answer = "";
-let prevAnswer = "";
-let currentState = "numOne" // numOne, numTwo, result
+let afterEquals = false;
 
 const numbers = document.querySelector(".numbers");
 const buttons = document.querySelector(".buttonSection");
@@ -41,26 +39,18 @@ function setNumTwo() {
 
 // operate function
 function operate(numOne, operator, numTwo) {
-    let answer;
-        switch (operator) {
-            case "+":
-                numOne = Number(numOne);
-                numTwo = Number(numTwo);
-                answer = add(numOne, numTwo);
-                break;
-            case "-":
-                answer = subtract(numOne, numTwo);
-                break;
-            case "x":
-                answer = multiply(numOne, numTwo);
-                break;
-            case "/":
-                answer = divide(numOne, numTwo);
-                break;
-            default:
-                console.log("invalid operator")
-        };
-    return answer;
+    numOne = Number(numOne);
+    numTwo = Number(numTwo);
+    switch (operator) {
+        case "+": return add(numOne, numTwo);
+        case "-": return subtract(numOne, numTwo);
+        case "x": return multiply(numOne, numTwo);
+        case "/": 
+            if (numTwo === 0) {
+                return "Error";
+            };
+            return divide(numOne, numTwo);
+    };
 };
 
 // clear the display 
@@ -71,7 +61,6 @@ function clearDisplay() {
 function enableDecimal() {
     keys.forEach((key) => {
         if (key.textContent === ".") {
-            hasDecimal = false;
             key.disabled = false;
         }
     });
@@ -80,84 +69,54 @@ function enableDecimal() {
 function disableDecimal() {
     keys.forEach((key) => {
         if (key.textContent === ".") {
-            hasDecimal = true;
             key.disabled = true;
         }
     });
 };
 
 function resetOperation() {
-    numOne = "";
-    numTwo = "";
+    currentValue = "";
+    storedValue = "";
     operator = "";
-    prevAnswer = "";
-    currentState = "numOne";
+    justEvaluated = false;
 }
 
 buttons.addEventListener("click", (event) => {
     let input = event.target.textContent
     if (input === ".") {
-        // turn off decimal button after 1 input
-        if (currentState === "numOne") {
-            numOne = numOne + input;
-        }
-        else {
-            numTwo = numTwo + input;
+        // only allow decimal if current value doesn't already include one
+        if (!currentValue.includes(".")) {
+            currentValue = currentValue + input;
+            numbers.textContent = currentValue;
+            disableDecimal();
         };
-        numbers.append(input);
-        disableDecimal();
+    // if number, edit currentValue
+    } else if (!isNaN(input)) {
+        if (afterEquals === true) {
+            storedValue = /* last value after equation */
+            afterEquals = false;
+        } 
+        currentValue = currentValue + input;
+        numbers.textCoontent = currentValue;
+        console.log(storedValue);
+        console.log(currentValue);
+    } else if (input === "+" || input === "-" || input === "x" || input === "/") {
+        if (storedValue != "" && currentValue != "") {
+            storedValue = operate(storedValue, input, currentValue);
+            currentValue = "";
+            operator = input;
+            numbers.textContent = storedValue;
+        } else {
+            storedValue = currentValue;
+            currentValue = "";
+            operator = input;
+        };
     } else if (input === "C") {
         // reset entire calculator
         clearDisplay();
         enableDecimal()
         resetOperation();
-    } else if (input === "+" || input === "-" || input === "x" || input === "/") {
-        operator = input;
-        if (currentState === "numOne") {
-            currentState = "numTwo";
-        } else if (prevAnswer === "" && currentState === "numTwo") {
-            numbers.textContent = operate(numOne, operator, numTwo);
-            prevAnswer = Number(numbers.textContent);  
-            console.log(`no equation pressed, prev answer is ${prevAnswer}`) 
-            numTwo = "";
-        } else if (currentState === "numTwo") {
-            numbers.textContent = operate(prevAnswer, operator, numTwo);
-            // answer = numbers.textContent;
-            prevAnswer = numbers.textContent;
-            numTwo = "";
-            // currentState = "result";
-        } else if (currentState === "result") {
-            console.log("here")
-        };
-        enableDecimal();
-    } else if (input === "=") {
-        // only executes if both nums have values
-        // runs the operation and assigns answer and previous answer
-        if (numOne != "" && numTwo != "" && currentState === "numTwo") {
-            numbers.textContent = operate(numOne, operator, numTwo);
-            answer = Number(numbers.textContent);
-            prevAnswer = Number(answer);
-            numTwo = "";
-            currentState = "result";
-        } else if (currentState === "result") {
-            numbers.textContent = operate(prevAnswer, operator, numTwo);
-            answer = numbers.textContent;
-            currentState = "result";
-            prevAnswer = Number(answer);
-            numTwo = "";
-        };
-    } else if (input === "?") {
-        // put a fun function here
-        console.log("this should be the ?");
-    } else if (currentState === "numOne") {
-        numOne = Number(numOne) + Number(input);
-        numbers.append(input);
-    } else if (currentState === "numTwo" || currentState === "result") {
-        // write code to make this just happen once
-        if (numTwo === "") {
-            clearDisplay();
-        };
-        numTwo = Number(numTwo + input);
-        numbers.append(input);
     };
+
+
 });
